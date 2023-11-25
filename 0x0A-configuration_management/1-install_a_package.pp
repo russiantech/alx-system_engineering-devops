@@ -1,8 +1,11 @@
-#!/usr/bin/pup
+# Install specific Flask version using puppet
 
-# install specific flask version using puppet
+package { 'pip3':
+  ensure   => 'installed',
+}
 
 package { 'flask':
- ensure   => '2.1.0',
- provider => 'pip3'
+  ensure   => '2.1.0',
+  provider => 'pip3',
+  require  => Package['pip3'],
 }
