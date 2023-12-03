@@ -5,4 +5,4 @@
 private_key_path="~/.ssh/school"
 
 # Connect to the server using ssh with the specified private key
-ssh -i "$private_key_path" ubuntu@8.8.8.8
+ssh -i "$private_key_path" ubuntu@100.25.119.84
