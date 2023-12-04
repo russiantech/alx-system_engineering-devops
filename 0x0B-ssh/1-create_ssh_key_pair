@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Check if the 'school' private key already exists
 if [ -f school ]; then
     echo "The 'school' private key already exists."
