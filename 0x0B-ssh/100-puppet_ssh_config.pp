@@ -1,5 +1,4 @@
 # Puppet manifest to configure SSH client
-
 include stdlib
 
 file_line { 'Turn off passwd auth':
