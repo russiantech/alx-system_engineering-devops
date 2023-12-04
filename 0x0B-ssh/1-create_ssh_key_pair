@@ -1,0 +1,13 @@
+#!/bin/bash
+# Check if the 'school' private key already exists
+if [ -f school ]; then
+    echo "The 'school' private key already exists."
+else
+    # Generate an RSA key pair with 4096 bits and passphrase 'betty'
+    ssh-keygen -t rsa -b 4096 -C "ubuntu@100.25.119.84" -N "betty" -f school
+
+    # Display the key fingerprint and randomart image
+    echo "Your identification has been saved in school."
+    echo "Your public key has been saved in school.pub."
+    ssh-keygen -lf school
+fi
