@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Configures a new Ubuntu machine for a 301-redirection and a custom 404 page
+
+# Update Packages before Installations
+sudo apt-get update
+sudo apt-get install -y nginx
+
+# Create an index.html page
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+# Configure a 301 Redirection and Custom 404 page
+sudo bash -c 'cat <<EOF > /etc/nginx/sites-enabled/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html;
+
+    server_name _;
+
+    location /redirect_me {
+        return 301 https://github.com/russiantech;
+    }
+
+    error_page 404 /404.html;
+    location = /404.html {
+        root /var/www/html;
+        internal;
+    }
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+}
+EOF'
+
+# Create a custom 404.html page with the desired content
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+
+# Custom HTTP response header
+sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
+
+# Test configurations for syntax errors
+sudo nginx -t
+
+# Restart Nginx service
+sudo service nginx restart
