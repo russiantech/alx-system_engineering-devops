@@ -1,48 +1,25 @@
 #!/usr/bin/env bash
-# Install Nginx
+# Custom 404-error_page
 
+# Update Packages before performing installations
+sudo apt-get update
+sudo apt-get install -y nginx
 
-apt-get update
-apt-get install -y nginx
+# Create an index.html page
+echo "Hello World!" | sudo tee /var/www/html/index.html
 
-# Create a custom 404 page with the required content
-echo "Ceci n'est pas une page" | tee /usr/share/nginx/html/404.html
+# Perform a "moved permanently redirection" (301)
+new_string="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/besthor permanent;"
+sudo sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-enabled/default
 
-# Configure Nginx to use the custom 404 page
-cat <<EOL > /etc/nginx/sites-available/default
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+# Create a 404 Custom error page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+new_string="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
 
-    root /usr/share/nginx/html;
-    index index.html index.htm;
+sudo sed -i "s/listen 80 default_server;/$new_string/" /etc/nginx/sites-enabled/default
 
-    server_name _;
+# Test this configs for syntax errors
+sudo nginx -t
 
-    location / {
-        try_files \$uri \$uri/ =404;
-    }
-
-    error_page 404 /404.html;
-    location = /404.html {
-        internal;
-    }
-
-    location = /50x.html {
-        internal;
-    }
-
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-        include fastcgi_params;
-    }
-}
-EOL
-
-# Test Nginx configuration
-nginx -t
-
-# Restart Nginx to apply changes
-service nginx restart
+# restart nginx after changes
+sudo service nginx restart
