@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Puppet script (2-puppet_custom_http_response_header.pp)
-# to configure a new Ubuntu machine with a custom HTTP header in Nginx
+# automate task 0 using nginx
 
 # Install Nginx
 class { 'nginx':
@@ -10,7 +9,7 @@ class { 'nginx':
 # Create a custom HTTP header file
 file { '/etc/nginx/conf.d/custom_headers.conf':
   ensure  => present,
-  content => "add_header X-Served-By $hostname;\n",
+  content => "# Custom HTTP header configuration\nadd_header X-Served-By $hostname;\n",
   notify  => Service['nginx'],
 }
 
@@ -20,3 +19,4 @@ service { 'nginx':
   enable  => true,
   require => File['/etc/nginx/conf.d/custom_headers.conf'],
 }
+
