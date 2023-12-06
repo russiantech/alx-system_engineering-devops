@@ -9,7 +9,7 @@ class { 'nginx':
 # Create a custom HTTP header file
 file { '/etc/nginx/conf.d/custom_headers.conf':
   ensure  => present,
-  content => "add_header X-Served-By $hostname;",
+  content => "add_header X-Served-By $hostname;\n",
   notify  => Service['nginx'],
 }
 
