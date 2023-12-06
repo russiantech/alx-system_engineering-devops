@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-#Puppet script (2-puppet_custom_http_response_header.pp) to configure a new Ubuntu machine with a custom HTTP header in Nginx
+# Puppet script (2-puppet_custom_http_response_header.pp)
+# to configure a new Ubuntu machine with a custom HTTP header in Nginx
 
 # Install Nginx
 class { 'nginx':
