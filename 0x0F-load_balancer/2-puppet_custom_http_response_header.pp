@@ -1,8 +1,22 @@
-# Automation: creates a custom HTTP header response with Puppet.
-exec { 'command':
-  command  => 'apt-get -y update;
-  apt-get -y install nginx;
-  sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $hostname;" /etc/nginx/sites-available/default;
-  service nginx restart',
-  provider => shell,
+#!/usr/bin/env bash
+# automate task 0 using nginx
+
+# Install Nginx
+class { 'nginx':
+  ensure => 'installed',
 }
+
+# Create a custom HTTP header file
+file { '/etc/nginx/conf.d/custom_headers.conf':
+  ensure  => present,
+  content => "# Custom HTTP header configuration\nadd_header X-Served-By $hostname;\n",
+  notify  => Service['nginx'],
+}
+
+# Restart Nginx service
+service { 'nginx':
+  ensure  => 'running',
+  enable  => true,
+  require => File['/etc/nginx/conf.d/custom_headers.conf'],
+}
+
