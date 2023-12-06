@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Update the package list
 sudo apt-get update
@@ -12,22 +12,23 @@ frontend web_frontend
     bind *:80
     mode http
     default_backend web_servers
+    timeout client 30s
 
 backend web_servers
     mode http
     balance roundrobin
+    timeout server 30s
+    timeout connect 10s
+    timeout server 10s
+    timeout queue 1m
+    option httpchk HEAD / HTTP/1.1\r\nHost:localhost
     server web-01 100.25.119.84:80 check
     server web-02 54.197.113.176:80 check
 
 EOL
 
 # Restart HAProxy to apply changes
-#sudo systemctl restart haproxy
 sudo service haproxy restart
 
-
 # Enable HAProxy to start on boot
-#sudo systemctl enable haproxy
-sudo service haproxy enable
-
-
+sudo systemctl enable haproxy
