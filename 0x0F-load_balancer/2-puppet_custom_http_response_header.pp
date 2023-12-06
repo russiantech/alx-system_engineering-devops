@@ -1,22 +1,21 @@
-# Automation: creates a custom HTTP header response with Puppet.
+#!/usr/bin/env bash
+#Puppet script (2-puppet_custom_http_response_header.pp) to configure a new Ubuntu machine with a custom HTTP header in Nginx
 
 # Install Nginx
-package { 'nginx':
-  ensure => installed,
+class { 'nginx':
+  ensure => 'installed',
 }
 
-# Define custom HTTP header response
-file_line { 'custom_http_header':
-  path   => '/etc/nginx/sites-available/default',
-  line   => '    add_header X-Served-By $hostname;',
-  match  => '^[\s]*add_header X-Served-By.*',
-  after  => '^[\s]*server_name.*',
-  notify => Service['nginx'],
+# Create a custom HTTP header file
+file { '/etc/nginx/conf.d/custom_headers.conf':
+  ensure  => present,
+  content => "add_header X-Served-By $hostname;",
+  notify  => Service['nginx'],
 }
 
-# Ensure Nginx service is running and enabled
+# Restart Nginx service
 service { 'nginx':
-  ensure    => running,
-  enable    => true,
-  subscribe => File_line['custom_http_header'],
+  ensure  => 'running',
+  enable  => true,
+  require => File['/etc/nginx/conf.d/custom_headers.conf'],
 }
