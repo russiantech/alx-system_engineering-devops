@@ -7,9 +7,9 @@ get_record_info() {
     
     result=$(dig +short "$sub_domain.$domain")
     if [ -z "$result" ]; then
-        echo "The subdomain $sub_domain is not an A record"
+        echo "The subdomain $sub_domain is not a A record"
     else
-        echo "The subdomain $sub_domain is an A record and points to $result"
+        echo "The subdomain $sub_domain is a A record and points to $result"
     fi
 }
 
