@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# script of task 0 but using less lines
-mv /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak # Backup the default Nginx configuration
+# Automate task 0(bash script) less code
 ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 service nginx restart
 kill "$(pgrep 'nginx' | head -1)"
