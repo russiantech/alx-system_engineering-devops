@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# This script displays information about subdomains
+
+get_record_info() {
+    local sub_domain="$1"
+    local domain="$2"
+    
+    result=$(dig +short "$sub_domain.$domain")
+    if [ -z "$result" ]; then
+        echo "The subdomain $sub_domain is not an A record"
+    else
+        echo "The subdomain $sub_domain is an A record and points to $result"
+    fi
+}
+
+domain="$1"
+sub_domain="$2"
+
+if [ -z "$sub_domain" ]; then
+    get_record_info www "$domain"
+    get_record_info lb-01 "$domain"
+    get_record_info web-01 "$domain"
+    get_record_info web-02 "$domain"
+else
+    get_record_info "$sub_domain" "$domain"
+fi
