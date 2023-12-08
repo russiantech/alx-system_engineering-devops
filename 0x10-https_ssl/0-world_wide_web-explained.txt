@@ -1,0 +1,23 @@
+Explanation:
+
+The script defines a function get_record_info that takes a subdomain, domain, and record type as arguments. It uses dig to query the DNS and extract the relevant information.
+
+The main part of the script checks whether a subdomain is provided as an argument. If not, it displays information about the default subdomains (www, lb-01, web-01, web-02). If a subdomain is provided, it displays information about that specific subdomain.
+
+The script uses awk to format the output and check if the result is empty. If the result is empty, it indicates that the subdomain is not a record of the specified type.
+
+Remember to make the script executable:
+
+bash
+Copy code
+chmod +x 0-world_wide_web
+You can then run the script:
+
+bash
+Copy code
+./0-world_wide_web holberton.online
+Or with a specific subdomain:
+
+bash
+Copy code
+./0-world_wide_web holberton.online web-02
