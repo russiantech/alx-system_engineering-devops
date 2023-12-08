@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Variables
+DOMAIN="techa.tech"
+
+# Install HAProxy
+sudo apt-get update && sudo apt-get install -y haproxy
+
+# Obtain SSL Certificate using Certbot
+sudo certbot certonly --standalone -d www.$DOMAIN
+
+# Generate PEM File
+sudo cat /etc/letsencrypt/live/www.$DOMAIN/fullchain.pem \
+    /etc/letsencrypt/live/www.$DOMAIN/privkey.pem \
+    | sudo tee /etc/ssl/certs/$DOMAIN.pem
+
+# Update HAProxy Configuration
+#sudo cp 1-haproxy_ssl_termination /etc/haproxy/haproxy.cfg
+
+# Restart HAProxy
+sudo service haproxy restart
