@@ -11,9 +11,9 @@
 # configure to redirect * incoming connection on port 8080 to 80.
 # (ensure port 80 is allowed. You can use ufw command for this.
 *nat
- PREROUTING ACCEPT [0:0]
--A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
-COMMIT
+ :PREROUTING ACCEPT [0:0]
+ -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
+ COMMIT
 
 # Don't delete these required lines, otherwise there will be errors
 *filter
