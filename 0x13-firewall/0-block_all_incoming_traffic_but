@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Update package information
+sudo apt-get update
+
+# Install UFW (Uncomplicated Firewall)
+sudo apt-get install -y ufw
+
+# Configure UFW to block all incoming traffic except for SSH, HTTP, and HTTPS
+sudo ufw default deny incoming
+sudo ufw allow 22     # Allow SSH
+sudo ufw allow 80     # Allow HTTP
+sudo ufw allow 443    # Allow HTTPS
+
+# Enable UFW to apply the rules
+sudo ufw enable
+
+# Display UFW status for verification
+sudo ufw status
