@@ -1,0 +1,85 @@
+sudo apt-get update
+sudo apt-get install --reinstall iptables
+
+sudo ufw default deny incoming # deny * incoming connections
+
+sudo ufw default allow outgoing # allow * incoming connections
+
+sudo ufw allow 22/tcp # allow * incoming connections on port 22 (SSH)(default TCP port and ssh). The `/tcp` makes it more strcitier
+sudo ufw allow 443/tcp # allow * incoming connections on port 443 (HTTPS SSL). The `/tcp` makes it more strcitier
+sudo ufw allow 80/tcp #80 (HTTP)
+sudo ufw  #Firewall is active and enabled on system startup
+sudo ufw status # check status.
+
+#edit `/etc/ufw/before.rules` to add port forwarding before the *filter option
+
+#enable ipv4 port forwarding by editing `vi /etc/sysctl.conf` and uncomment that ipv4 line.
+
+Now reload that config file by running `sudo sysctl -p`
+
+
+#FOR TASK 2. Almost similar. Just a copy of the configured file
+
+[200~To achieve port forwarding on web-01 using UFW, you need to create or modify the UFW configuration file. In this case, you'll copy the modified UFW configuration file to 100-port_forwarding. Below is an example of how you can do this:
+
+Open the UFW configuration file for editing:
+bash
+Copy code
+sudo nano /etc/ufw/before.rules
+Add the following lines to forward traffic from port 8080 to port 80. Place these lines before the COMMIT line:
+plaintext
+Copy code
+# Port Forwarding
+*nat
+:PREROUTING ACCEPT [0:0]
+-A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
+COMMIT
+Save the changes and exit the editor.
+
+Verify the UFW configuration:
+
+bash
+Copy code
+sudo ufw status
+Ensure that the configuration reflects the changes you made.
+
+Save the UFW configuration to a new file:
+bash
+Copy code
+sudo cp /etc/ufw/before.rules 100-port_forwarding
+Now, the contents of 100-port_forwarding should include the port forwarding rules.
+
+Below is an example entry for your answer file:
+
+plaintext
+Copy code
+# Answer for Task: Port Forwarding
+
+1. Open the UFW configuration file for editing:
+   ```bash
+   sudo nano /etc/ufw/before.rules
+Add the following lines to forward traffic from port 8080 to port 80:
+
+plaintext
+Copy code
+# Port Forwarding
+*nat
+:PREROUTING ACCEPT [0:0]
+-A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
+COMMIT
+Save the changes and exit the editor.
+
+Verify the UFW configuration:
+
+bash
+Copy code
+sudo ufw status
+Save the UFW configuration to a new file:
+
+bash
+Copy code
+sudo cp /etc/ufw/before.rules 100-port_forwarding
+vbnet
+Copy code
+
+After creating the `100-port_forwarding` file, it can be used to configure the firewall on `web-01` by copying it and then running `ufw enable` to apply the changes.
