@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# This script configures the container to run Nginx as the nginx user and listen on port 8080
+
+# Update Nginx configuration to run as nginx user
+sed -i 's/user  nginx;/user  nginx;/' /etc/nginx/nginx.conf
+
+# Ensure Nginx is listening on all active IPs on port 8080
+echo "listen 8080;" > /etc/nginx/conf.d/listen-on-8080.conf
+
+# Restart Nginx to apply changes
+service nginx restart
+
+# Verify Nginx is running as nginx user and listening on port 8080
+ps auxff | grep "nginx: master process"
+netstat -tulpn | grep nginx
+
+# Check if Nginx is reachable on port 8080
+nc -z 0 8080

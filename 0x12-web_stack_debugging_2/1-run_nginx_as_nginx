@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# We have to run Nginx as Nginx
+
+# Check if the files exist before attempting to modify them
+if [ -f /etc/apache2/ports.conf ]; then
+    chmod ugo+wrx /etc/apache2/ports.conf
+    sed -i 's/Listen 8080/#Listen 8080/g' /etc/apache2/ports.conf
+    pkill -1 apache2
+fi
+
+if [ -f /etc/nginx/nginx.conf ]; then
+    chmod ugo+wrx /etc/nginx/nginx.conf
+    sed -i 's/#user www-data;/user nginx;/g' /etc/nginx/nginx.conf
+fi
+
+if [ -f /etc/nginx/sites-available/default ]; then
+    sed -i 's/80/8080/g' /etc/nginx/sites-available/default
+fi
+
+# Restart Nginx to apply changes
+service nginx restart
